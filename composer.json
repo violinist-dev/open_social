@@ -41,6 +41,7 @@
                 "Add relationship to flagged entities when Flagging is base table": "https://www.drupal.org/files/issues/2723703_31.patch"
             },
             "drupal/group": {
+                "Crash when clicking delete on any group content": "https://www.drupal.org/files/issues/2908830-04.patch",
                 "Add computed field for Group reference": "https://www.drupal.org/files/issues/add-computed-field-without-FieldItemListComputedInterface-2718195-34.patch"
             },
             "drupal/like_and_dislike": {
