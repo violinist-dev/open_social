@@ -167,6 +167,6 @@ function social_topic_views_query_alter(ViewExecutable $view, QueryPluginBase $q
 /**
  * Implements hook_social_follow_content_types_alter().
  */
-function social_topic_social_follow_content_types_alter(&$types) {
+function social_topic_social_follow_content_types_alter(array &$types) {
   $types[] = 'topic';
 }
