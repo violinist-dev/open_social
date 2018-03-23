@@ -6,13 +6,9 @@
  */
 
 use Drupal\Core\Block\BlockPluginInterface;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
-use Drupal\flag\Entity\Flag;
-use Drupal\flag\FlagInterface;
-use Drupal\node\NodeInterface;
 use Drupal\views\Plugin\views\query\QueryPluginBase;
 use Drupal\views\ViewExecutable;
 
@@ -169,24 +165,8 @@ function social_topic_views_query_alter(ViewExecutable $view, QueryPluginBase $q
 }
 
 /**
- * Implements hook_ENTITY_TYPE_insert().
+ * Implements hook_social_follow_content_types_alter().
  */
-function social_topic_comment_insert(EntityInterface $entity) {
-  /** @var \Drupal\comment\CommentInterface $entity */
-  $entity = $entity->getCommentedEntity();
-
-  if ($entity instanceof NodeInterface && $entity->bundle() == 'topic') {
-    $flag = Flag::load('follow_content');
-
-    if ($flag instanceof FlagInterface) {
-      /** @var \Drupal\flag\FlagService $service */
-      $service = \Drupal::service('flag');
-
-      if (empty($service->getFlagging($flag, $entity))) {
-        $service->flag($flag, $entity);
-
-        drupal_set_message(t('You were followed to a content of this topic.'));
-      }
-    }
-  }
+function social_topic_social_follow_content_types_alter(&$types) {
+  $types[] = 'topic';
 }

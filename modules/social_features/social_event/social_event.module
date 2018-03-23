@@ -298,3 +298,10 @@ function _social_event_format_date($event, $view_mode) {
 
   return $event_date;
 }
+
+/**
+ * Implements hook_social_follow_content_types_alter().
+ */
+function social_event_social_follow_content_types_alter(&$types) {
+  $types[] = 'event';
+}
