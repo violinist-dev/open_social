@@ -45,8 +45,63 @@ class SocialLanguageMetadataBubblingUrlGenerator extends MetadataBubblingUrlGene
     if (isset($options['language']) && $options['language'] instanceof LanguageInterface) {
       $language = $this->languageManager->getCurrentLanguage();
 
-      if ($options['language']->getId() != $language->getId()) {
-        $options['language'] = $language;
+      // By default we change the link language if it differs from the current.
+      $reset_language = $options['language']->getId() != $language->getId();
+
+      if (isset($options['entity'])) {
+        $entity_type = $options['entity']->getEntityTypeId();
+
+        // Ignore the following uri relationships because they are language
+        // specific. e.g. a node edit form editing a translation.
+        // Entity::toURL does something similar for entity add pages.
+        $allowed_rel = [
+          'edit-form',
+          'cancel-form',
+          'delete-form',
+          'drupal:content-translation-add',
+          'drupal:content-translation-edit',
+          'drupal:content-translation-delete',
+        ];
+
+        // Allow other modules to add their own language specific links.
+        \Drupal::moduleHandler()->alter('social_language_allowed_rels', $allowed_rel);
+
+        $exception_routes = [];
+
+        foreach ($allowed_rel as $rel) {
+          $exception_routes[] = "entity.{$entity_type}." . str_replace(['-', 'drupal:'], ['_', ''], $rel);
+        }
+
+        if (in_array($name, $exception_routes)) {
+          $reset_language = FALSE;
+        }
+      }
+
+      // If we're on a path where there are links intentionally leading to
+      // pages in other languages then we also don't modify any routes.
+      // An example is the node translation overview page.
+      $current_route = \Drupal::routeMatch()->getRouteName();
+
+      $unmodified_pages = [
+        'content_translation_overview'
+      ];
+
+      // Allow other modules to add their own pages where this is disabled.
+      \Drupal::moduleHandler()->alter('social_language_unmodified_pages', $unmodified_pages);
+
+      // Route names like entity.<node_type>.translation_overview
+      // $unmodified_pages = ['entity']; disables this for all entity routes.
+      $route_parts = explode('.', $current_route);
+
+      foreach ($unmodified_pages as $page) {
+        if (in_array($page, $route_parts)) {
+          $reset_language = FALSE;
+          break;
+        }
+      }
+
+      if ($reset_language) {
+//        $options['language'] = $language;
       }
     }
 
