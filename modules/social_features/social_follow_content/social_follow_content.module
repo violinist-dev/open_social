@@ -82,7 +82,7 @@ function social_follow_content_comment_insert(EntityInterface $entity) {
     if (empty($service->getFlagging($flag, $entity))) {
       $service->flag($flag, $entity);
 
-      drupal_set_message(t('You were followed to a content of this @type.', [
+      drupal_set_message(t('You are now automatically following this @type.', [
         '@type' => $entity->getType(),
       ]));
     }
