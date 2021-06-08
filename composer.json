@@ -124,7 +124,7 @@
         "oomphinc/composer-installers-extender": "^1.1",
         "drupal/core": "~8.8.8",
         "drupal/core-composer-scaffold": "~8.8.8",
-        "drupal/address": "1.7",
+        "drupal/address": "1.9.0",
         "drupal/admin_toolbar": "1.27",
         "drupal/ajax_comments": "^1.0",
         "drupal/better_exposed_filters": "3.0-alpha6",
